@@ -3,8 +3,8 @@ import budget
 
 def test_ledger():
     food = budget.Category("food")
-    clothing = budget.Category('clothing')
     food.deposit(1000, "deposito inicial")
+    clothing = budget.Category('clothing')
     assert budget.Category.ledger[budget.Category.count - 1] == {"amount": 1000, "description": "deposito inicial"}
     food.withdraw(250, "almoço de ontem")
     assert budget.Category.ledger[budget.Category.count - 1] == {"amount": -250, "description": "almoço de ontem"}
@@ -66,6 +66,19 @@ def test_transfer():
     assert clothing.funds == 1300
     food.funds = 0
     clothing.funds = 0
+    budget.Category.count = 0
+    budget.Category.ledger.clear()
+
+
+def test_check_funds():
+    food = budget.Category("food")
+    food.deposit(1000, "deposito inicial")
+    assert food.check_funds(1200) is False
+    assert food.check_funds(1000) is True
+    assert food.check_funds(1001) is False
+    assert food.check_funds(999) is True
+    assert food.check_funds(1) is True
+    food.funds = 0
     budget.Category.count = 0
     budget.Category.ledger.clear()
 

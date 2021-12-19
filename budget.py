@@ -13,7 +13,7 @@ class Category:
         Category.count += 1
 
     def withdraw(self, amount, description=""):
-        if amount <= self.funds:
+        if self.check_funds(amount):
             self.funds -= amount
             Category.ledger.append({"amount": (-amount), "description": description})
             Category.count += 1
@@ -23,11 +23,19 @@ class Category:
     def get_balance(self):
         return self.funds
 
+    def check_funds(self, amount):
+        if self.funds >= amount:
+            return True
+        return False
+
     def transfer(self, amount, category):
-        if self.withdraw(amount, f'Transfer to {category.name}'):
+        if self.check_funds(amount):
+            self.withdraw(amount, f'Transfer to {category.name}')
             category.deposit(amount, f"Transfer from {self.name}")
             return True
         return False
+
+
 
 
 def create_spend_chart(categories):
