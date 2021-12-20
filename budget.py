@@ -1,22 +1,30 @@
 class Category:
 
-    ledger = []
-    count = 0
+
 
     def __init__(self, name, funds=0):
         self.funds = funds
         self.name = name
+        self.ledger = []
+    def __str__(self):
+        fh = open("list_of_elements.txt", "w+")
+        for element in self.ledger:
+            if len(element["description"]) > 23:
+                element["description"] = element["description"][0:23]
+            fh.write(f'{element["description"]:<23}{element["amount"]:>7}\n')
+        fh.write('\n')
+        fh.close()
+        with open("list_of_elements.txt", "r+") as fh:
+            return f'{self.name:*^30}\n{fh.read()}'
 
     def deposit(self, amount, description=""):
         self.funds += amount
-        Category.ledger.append({"amount": self.funds, "description": description})
-        Category.count += 1
+        self.ledger.append({"amount": amount, "description": description})
 
     def withdraw(self, amount, description=""):
         if self.check_funds(amount):
             self.funds -= amount
-            Category.ledger.append({"amount": (-amount), "description": description})
-            Category.count += 1
+            self.ledger.append({"amount": (-amount), "description": description})
             return True
         return False
 
@@ -36,20 +44,16 @@ class Category:
         return False
 
 
-
-
 def create_spend_chart(categories):
     pass
 
 
 if __name__ == '__main__':
-    food = Category('food')
-    clothing = Category('clothing')
-    food.deposit(1500, "deposito inicial")
-    print(Category.ledger)
-    food.withdraw(300, 'Comida do mês')
-    print(Category.ledger)
-    print(food.get_balance())
-    food.transfer(300, clothing)
-    print(Category.ledger)
-    print(clothing.get_balance())
+    food = Category('Food')
+    clothing = Category('Clothing')
+    food.deposit(1000, 'deposito inicial')
+    food.deposit(900, 'deposito')
+    food.withdraw(300, 'comida do mes de fevereiro de 2004 no natal')
+    food.transfer(100, clothing)
+    print(food)
+
