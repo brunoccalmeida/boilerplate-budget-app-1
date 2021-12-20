@@ -1,0 +1,4 @@
+deposito inicial       1000.00
+groceries               -10.15
+restaurant and more foo -15.89
+Total: 973.96

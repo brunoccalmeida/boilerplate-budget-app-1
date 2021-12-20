@@ -1,3 +1,4 @@
-Transfer from Food          50
-                        -25.55
-
+movies                 -100.00
+pc game                 -90.00
+                         50.00
+Total: 860
