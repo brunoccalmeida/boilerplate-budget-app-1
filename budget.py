@@ -47,25 +47,46 @@ def create_spend_chart(categories):
     list_of_categories = categories
     number_of_categories = len(list_of_categories)
     dict_of_variables = {}
-    for n in range(1, number_of_categories+1):
-        dict_of_variables[f'cat{n}'] = 0
-    for category in list_of_categories:
-        print(category.__repr__())
+    count = 0
 
+    for n in range(number_of_categories):
+        dict_of_variables[f'{list_of_categories[n].name}'] = 0
 
+    for cat in list_of_categories:
+        for element in cat.ledger:
+            if element['amount'] < 0:
+                dict_of_variables[f'{list_of_categories[count].name}'] += element['amount']
+        count += 1
+    soma = 0
 
+    for v in dict_of_variables.values():
+        soma += v
+    dict_of_percentages = dict_of_variables.copy()
 
-    #         if cat.name == 'Food' and element['amount'] < 0:
-    #             food_total_spent += element['amount']
-    #         if cat.name == 'Clothing' and element['amount'] < 0:
-    #             clothing_total_spent += element['amount']
-    #         if cat.name == 'Entertainment' and element['amount'] < 0:
-    #             entertainment_total_spent += element['amount']
-    # total = food_total_spent + clothing_total_spent + entertainment_total_spent
-    # food_percent = (food_total_spent / total) * 100
-    # clothing_percent = (clothing_total_spent / total) * 100
-    # entertainment_percent = (entertainment_total_spent / total) * 100
-    # print(f'Food: {food_percent:.0f} Clothing: {clothing_percent:.0f} Entertainment: {entertainment_percent:.0f}')
+    for k, v in dict_of_variables.items():
+        dict_of_percentages[k] = round((v / soma) * 100)
+
+    names_of_categories = []
+    for item in list_of_categories:
+        names_of_categories.append(item.name)
+
+    # maior_palavra_categoria = 0
+    #
+    # for palavra in names_of_categories:
+    #     if len(palavra) > maior_palavra_categoria:
+    #         maior_palavra_categoria = len(palavra)
+
+    with open('chart.txt', 'w+') as file_chart:
+        for i in range(100, 0, -10):
+            file_chart.write(f'{i:>3}| ')
+            for v in dict_of_percentages.values():
+                if i < v:
+                    file_chart.write(f'o  ')
+            file_chart.write(f'\n')
+        file_chart.write(f'    {"":->{len(dict_of_variables)*3+1}}\n')
+        for i in names_of_categories:
+            file_chart.write(f'{i[0]:}')
+
 
 
 if __name__ == '__main__':
